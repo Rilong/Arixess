@@ -16,3 +16,6 @@ use Illuminate\Support\Facades\Route;
 Auth::routes();
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::post('/message', [\App\Http\Controllers\MessageController::class, 'create'])
+    ->middleware(['auth'])
+    ->name('message.create');

@@ -45,4 +45,8 @@ class User extends Authenticatable
     public function isManager() {
         return $this->role === 'manager';
     }
+
+    public function massages() {
+        return $this->hasMany(Message::class);
+    }
 }
