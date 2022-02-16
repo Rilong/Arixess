@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class Message extends Model
 {
@@ -14,14 +14,75 @@ class Message extends Model
 
     protected $fillable = ['user_id', 'subject', 'text', 'filename'];
 
-    public static function getLastBetweenDay($user_id) {
+    /**
+     * Returns a last message within twenty-four hours
+     *
+     * @param $user_id
+     * @return mixed
+     */
+
+    public static function getLastWithinDay($user_id)
+    {
         return Message::where([
             ['user_id', $user_id],
-            ['created_at', '>',Carbon::now()->subDay()],
+            ['created_at', '>', Carbon::now()->subDay()],
         ])->first();
     }
 
-    public function message(): BelongsTo
+    /**
+     * Returns Massage data for sending email
+     *
+     * @return array
+     */
+
+    public function getDetails(): array
+    {
+        return [
+            'id' => $this->id,
+            'subject' => $this->subject,
+            'text' => $this->text,
+            'email' => $this->user->email,
+            'name' => $this->user->name,
+            'file_url' => $this->getFileUrl()
+        ];
+    }
+
+    /**
+     * Returns file url
+     *
+     * @return string|null
+     */
+
+    public function getFileUrl(): ?string
+    {
+        if ($this->filename) {
+            return Storage::url('files/' . $this->filename);
+        }
+        return null;
+    }
+
+    /**
+     * Toggles read field and saves it
+     *
+     * @return void
+     */
+
+    public function toggleRead() {
+        if ($this->is_read) {
+            $this->is_read = false;
+        } else {
+            $this->is_read = true;
+        }
+        $this->save();
+    }
+
+    /**
+     * Relationship for User model
+     *
+     * @return BelongsTo
+     */
+
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
