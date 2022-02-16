@@ -3,7 +3,7 @@
 @section('content')
     @auth()
         @manager()
-            manager
+            @include('messages')
         @else
             @include('contact')
         @endmanager
