@@ -19,3 +19,7 @@ Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('ho
 Route::post('/message', [\App\Http\Controllers\MessageController::class, 'create'])
     ->middleware(['auth'])
     ->name('message.create');
+
+Route::post('/read-toggle/{id}', [\App\Http\Controllers\MessageController::class, 'toggleRead'])
+    ->middleware(['auth', 'managers'])
+    ->name('message.toggleRead');
