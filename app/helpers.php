@@ -17,7 +17,7 @@ if (!function_exists('uploadFile'))
     function uploadFile(UploadedFile $file): ?string
     {
         $filename = time() . $file->getClientOriginalName();
-        Storage::disk('local')->putFileAs('files/' . $filename, $file, $filename);
+        Storage::disk('public')->putFileAs('files/', $file, $filename);
         return $filename;
     }
 }
