@@ -42,9 +42,30 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    /**
+     * Return all the manages
+     *
+     * @return mixed
+     */
+    public static function getManagers() {
+        return self::where(['role' => 'manager'])->get();
+    }
+
+    /**
+     * Checks user is a manager or not
+     *
+     * @return bool
+     */
+
     public function isManager() {
         return $this->role === 'manager';
     }
+
+    /**
+     * Relationship for massages
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
 
     public function massages() {
         return $this->hasMany(Message::class);
